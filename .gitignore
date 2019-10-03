@@ -1,0 +1,8 @@
+# Package Files #
+*.zip
+*.tar.gz
+*.rar
+
+# IDE settings
+**/.settings/
+/bin
