@@ -1,0 +1,48 @@
+{
+  "project_info": {
+    "project_number": "370000075349",
+    "firebase_url": "https://balexpenses-bbaae.firebaseio.com",
+    "project_id": "balexpenses-bbaae",
+    "storage_bucket": "balexpenses-bbaae.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:370000075349:android:6850cc510029c3776292dc",
+        "android_client_info": {
+          "package_name": "ch.baloise.balexpenses"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "370000075349-1qjj1vnkk0nlflr97h5ar58181ldjq59.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "ch.baloise.balexpenses",
+            "certificate_hash": "92443c5f77145f31deba923fa40cae2202570b0a"
+          }
+        },
+        {
+          "client_id": "370000075349-tui2jeb51rj7ruqebhdrjlpfnd65ek52.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBbG7gOCRvGiDV8eCWFr6ftktPt81DvrAQ"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "370000075349-tui2jeb51rj7ruqebhdrjlpfnd65ek52.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
