@@ -1,4 +1,5 @@
 import 'package:balexpenses/screens/AuthScreen.dart';
+import 'package:balexpenses/screens/InvoiceSelection.dart';
 import 'package:flutter/material.dart';
 
 class HomeScreen extends StatelessWidget {
@@ -8,6 +9,11 @@ class HomeScreen extends StatelessWidget {
         appBar: AppBar(
           title: Text("Baloise expenses"),
         ),
-        body: AuthScreen());
+        body: Column(
+          children: <Widget>[
+            AuthScreen(),
+            InvoiceSelection(),
+          ],
+        ));
   }
 }
