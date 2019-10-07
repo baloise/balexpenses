@@ -25,6 +25,22 @@ class _InvoiceSelectionState extends State<InvoiceSelection> {
     return Container(
       child: Column(
         children: <Widget>[
+          Container(
+            width: 150,
+            height: 100,
+            decoration:
+                BoxDecoration(border: Border.all(width: 1, color: Colors.grey)),
+            child: this._image != null
+                ? Image.file(
+                    _image,
+                    fit: BoxFit.cover,
+                    width: double.infinity,
+                  )
+                : Text(
+                    'No Image Selected',
+                    textAlign: TextAlign.center,
+                  ),
+          ),
           RaisedButton(
             onPressed: getImage,
             child: Text("select image from gallery"),
