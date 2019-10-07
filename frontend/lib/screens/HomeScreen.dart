@@ -1,8 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class HomeScreen extends StatelessWidget {
-  Future<void> _signInAnonymously() async {
+  Future<void> _signInWithEmailAndPassword() async {
     try {
       final FirebaseUser user = (await FirebaseAuth.instance
               .signInWithEmailAndPassword(
@@ -15,6 +16,24 @@ class HomeScreen extends StatelessWidget {
     }
   }
 
+  Future<void> _signInWithGoogle() async {
+    final GoogleSignIn _googleSignIn = GoogleSignIn();
+    final FirebaseAuth _auth = FirebaseAuth.instance;
+
+    final GoogleSignInAccount googleUser = await _googleSignIn.signIn();
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser.authentication;
+
+    final AuthCredential credential = GoogleAuthProvider.getCredential(
+      accessToken: googleAuth.accessToken,
+      idToken: googleAuth.idToken,
+    );
+
+    final FirebaseUser user =
+        (await _auth.signInWithCredential(credential)).user;
+    print("signed in " + user.displayName);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -24,11 +43,15 @@ class HomeScreen extends StatelessWidget {
       body: Center(
         child: Column(
           children: <Widget>[
-            RaisedButton(
-              onPressed: _signInAnonymously,
-              child: Text("Anonymes Login"),
-            ),
             Text("Baloise expenses"),
+            RaisedButton(
+              onPressed: _signInWithEmailAndPassword,
+              child: Text("Sign in with email/password"),
+            ),
+            RaisedButton(
+              onPressed: _signInWithGoogle,
+              child: Text("Sign in with Google"),
+            ),
             Text("USER"),
           ],
         ),
