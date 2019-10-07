@@ -27,6 +27,7 @@ matrix:
             - libstdc++6
             - fonts-droid
       before_script:
+        - sudo apt-get install -y --no-install-recommends lib32stdc++6 libstdc++6 > /dev/null
         - wget http://services.gradle.org/distributions/gradle-3.5-bin.zip
         - unzip -qq gradle-3.5-bin.zip
         - export GRADLE_HOME=$PWD/gradle-3.5
