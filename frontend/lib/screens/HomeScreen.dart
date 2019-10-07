@@ -6,7 +6,7 @@ class HomeScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-          title: Text("Baloise expenses"),
+          title: Text("Baloise expenses", key: Key('homeScreen_title')),
         ),
         body: AuthScreen());
   }

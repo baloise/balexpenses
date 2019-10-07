@@ -37,6 +37,7 @@ matrix:
         - cd frontend
         - flutter packages get
 #        - flutter test // TODO: reactivate test
+        - flutter drive --target=test_driver/app.dart
         - flutter build apk --release
       before_install:
         - yes | sdkmanager "platforms;android-28"
