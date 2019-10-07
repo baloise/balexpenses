@@ -35,19 +35,21 @@ class _AuthScreenState extends State<AuthScreen> {
             },
             child: Text("debug"),
           ),
-          Text("USER"),
+          Text(this.user != null ? user.email : '-'),
         ],
       ),
     );
   }
 
   Future<void> _signInWithEmailAndPassword() async {
+    var u = (await FirebaseAuth.instance.signInWithEmailAndPassword(
+            email: 'timo@klueber.email', password: '12345678'))
+        .user;
+    print(u.email);
     try {
-      user = (await FirebaseAuth.instance.signInWithEmailAndPassword(
-              email: 'timo@klueber.email', password: '12345678'))
-          .user;
-
-      print(user.email);
+      setState(() {
+        this.user = u;
+      });
     } catch (e) {
       print(e); // TODO: show dialog with error
     }
@@ -66,13 +68,18 @@ class _AuthScreenState extends State<AuthScreen> {
       idToken: googleAuth.idToken,
     );
 
-    user = (await _auth.signInWithCredential(credential)).user;
-    print("signed in " + user.displayName);
+    var u = (await _auth.signInWithCredential(credential)).user;
+    print("signed in " + u.displayName);
+    setState(() {
+      this.user = u;
+    });
   }
 
   Future<void> _signOut() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     _auth.signOut();
-    user = null;
+    setState(() {
+      this.user = null;
+    });
   }
 }
