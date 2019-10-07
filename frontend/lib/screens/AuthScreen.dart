@@ -9,6 +9,8 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
+  FirebaseUser user;
+
   @override
   Widget build(BuildContext context) {
     return Center(
@@ -27,6 +29,12 @@ class _AuthScreenState extends State<AuthScreen> {
             onPressed: _signOut,
             child: Text("Sign out"),
           ),
+          RaisedButton(
+            onPressed: () {
+              print(user.email);
+            },
+            child: Text("debug"),
+          ),
           Text("USER"),
         ],
       ),
@@ -35,9 +43,8 @@ class _AuthScreenState extends State<AuthScreen> {
 
   Future<void> _signInWithEmailAndPassword() async {
     try {
-      final FirebaseUser user = (await FirebaseAuth.instance
-              .signInWithEmailAndPassword(
-                  email: 'timo@klueber.email', password: '12345678'))
+      user = (await FirebaseAuth.instance.signInWithEmailAndPassword(
+              email: 'timo@klueber.email', password: '12345678'))
           .user;
 
       print(user.email);
@@ -59,13 +66,13 @@ class _AuthScreenState extends State<AuthScreen> {
       idToken: googleAuth.idToken,
     );
 
-    final FirebaseUser user =
-        (await _auth.signInWithCredential(credential)).user;
+    user = (await _auth.signInWithCredential(credential)).user;
     print("signed in " + user.displayName);
   }
 
   Future<void> _signOut() async {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     _auth.signOut();
+    user = null;
   }
 }
