@@ -40,6 +40,7 @@ matrix:
         - flutter drive --target=test_driver/app.dart
         - flutter build apk --release
       before_install:
+        - flutter devices
         - yes | sdkmanager "platforms;android-28"
 #    - os: osx
 #      language: generic
