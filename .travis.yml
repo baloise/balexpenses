@@ -40,21 +40,21 @@ matrix:
         - flutter build apk --release
       before_install:
         - yes | sdkmanager "platforms;android-28"
-    - os: osx
-      language: generic
-      osx_image: xcode11
-      before_script:
-        - brew update
-        - brew install libimobiledevice
-        - brew install ideviceinstaller
-        - brew install ios-deploy
-        - git clone https://github.com/flutter/flutter.git -b stable
-        - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
-      script:
-        - cd frontend
-        - flutter packages get
-#        - flutter test // TODO: reactivate test
-        - flutter build ios --no-codesign
+#    - os: osx
+#      language: generic
+#      osx_image: xcode11
+#      before_script:
+#        - brew update
+#        - brew install libimobiledevice
+#        - brew install ideviceinstaller
+#        - brew install ios-deploy
+#        - git clone https://github.com/flutter/flutter.git -b stable
+#        - export PATH=`pwd`/flutter/bin:`pwd`/flutter/bin/cache/dart-sdk/bin:$PATH
+#      script:
+#        - cd frontend
+#        - flutter packages get
+##        - flutter test // TODO: reactivate test
+#        - flutter build ios --no-codesign
 cache:
   directories:
     - $HOME/.pub-cache
