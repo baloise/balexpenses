@@ -3,13 +3,10 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
-class AuthScreen extends StatefulWidget {
-  @override
-  _AuthScreenState createState() => _AuthScreenState();
-}
+class AuthScreen extends StatelessWidget {
+  final Function setUser;
 
-class _AuthScreenState extends State<AuthScreen> {
-  UserInfo user;
+  const AuthScreen({this.setUser});
 
   @override
   Widget build(BuildContext context) {
@@ -29,13 +26,6 @@ class _AuthScreenState extends State<AuthScreen> {
             onPressed: _signOut,
             child: Text("Sign out"),
           ),
-          RaisedButton(
-            onPressed: () {
-              print(user.email);
-            },
-            child: Text("debug"),
-          ),
-          Text(this.user != null ? user.email : '-'),
         ],
       ),
     );
@@ -69,11 +59,5 @@ class _AuthScreenState extends State<AuthScreen> {
     final FirebaseAuth _auth = FirebaseAuth.instance;
     _auth.signOut();
     setUser(null);
-  }
-
-  void setUser(u) {
-    setState(() {
-      this.user = u;
-    });
   }
 }
