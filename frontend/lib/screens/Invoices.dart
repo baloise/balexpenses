@@ -1,7 +1,11 @@
 import 'dart:io';
 
 import 'package:balexpenses/screens/InvoiceSelection.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path/path.dart';
 
 class Invoices extends StatefulWidget {
   final user;
@@ -14,12 +18,9 @@ class Invoices extends StatefulWidget {
 
 class _InvoicesState extends State<Invoices> {
   File _image;
-
-  void _setImage(File image) {
-    setState(() {
-      _image = image;
-    });
-  }
+  String fileId;
+  final FirebaseStorage _storage =
+      FirebaseStorage(storageBucket: 'gs://balexpenses-bbaae.appspot.com/');
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +41,40 @@ class _InvoicesState extends State<Invoices> {
                 textAlign: TextAlign.center,
               ),
       ),
-      InvoiceSelection(user: widget.user, setImage: _setImage, image: _image),
+      InvoiceSelection(
+          user: widget.user,
+          image: _image,
+          startUpload: _startUpload,
+          getImage: _getImage),
+      RaisedButton(
+        child: Text('abc'),
+        onPressed: saveOcrData,
+      )
     ]);
+  }
+
+  Future _getImage() async {
+    var image = await ImagePicker.pickImage(source: ImageSource.gallery);
+    fileId = DateTime.now().millisecondsSinceEpoch.toString();
+
+    setState(() {
+      _image = image;
+    });
+  }
+
+  void _startUpload() {
+    var fileExtension = basename(_image.path).split('.').last;
+
+    String filePath = "invoices/${widget.user.uid}/$fileId.$fileExtension";
+    _storage.ref().child(filePath).putFile(_image);
+  }
+
+  void saveOcrData() {
+    Firestore.instance
+        .collection('user')
+        .document(widget.user.uid)
+        .collection('invoices')
+        .document(fileId)
+        .setData({'date': DateTime.now(), 'market': 'lidl', 'sum': 10.20});
   }
 }
