@@ -1,7 +1,8 @@
 import 'package:balexpenses/screens/AuthScreen.dart';
-import 'package:balexpenses/screens/InvoiceSelection.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+
+import 'Invoices.dart';
 
 class HomeScreen extends StatefulWidget {
   @override
@@ -28,7 +29,7 @@ class _HomeScreenState extends State<HomeScreen> {
             AuthScreen(
               setUser: _setUser,
             ),
-            InvoiceSelection(
+            Invoices(
               user: user,
             ),
             Text(this.user != null ? user.email : '-'),
