@@ -60,7 +60,7 @@ class _InvoicesState extends State<Invoices> {
       ),
       RaisedButton(
         child: Text('abc'),
-        onPressed: saveOcrData,
+        onPressed: () => saveOcrData(_invoice),
       )
     ]);
   }
@@ -98,6 +98,6 @@ class _InvoicesState extends State<Invoices> {
         .document(widget.user.uid)
         .collection('invoices')
         .document(fileId)
-        .setData({'date': DateTime.now(), 'market': 'lidl', 'sum': 10.20});
+        .setData(data);
   }
 }
