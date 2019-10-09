@@ -1,4 +1,6 @@
 import 'package:balexpenses/screens/AuthScreen.dart';
+import 'package:balexpenses/screens/ResultScreen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
@@ -11,6 +13,21 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   UserInfo user;
+
+  String result;
+
+  getResult() {
+    Firestore.instance
+        .collection('user')
+        .document(user.uid)
+        .collection('invoices')
+        .getDocuments()
+        .then((snapshot) {
+      setState(() {
+        result = snapshot.documents.first.data['market'];
+      });
+    });
+  }
 
   void _setUser(u) {
     setState(() {
@@ -32,6 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
             Invoices(
               user: user,
             ),
+            ResultScreen(user: user, result: result, getResult: getResult),
             Text(this.user != null ? user.email : '-'),
           ],
         ));
