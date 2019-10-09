@@ -1,13 +1,13 @@
 import 'dart:io';
 
 import 'package:balexpenses/screens/InvoiceSelection.dart';
+import 'package:balexpenses/providers/ocr_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
-import 'package:balexpenses/models/Invoice.dart';
-import 'package:firebase_ml_vision/firebase_ml_vision.dart';
+import 'package:provider/provider.dart';
 
 
 class Invoices extends StatefulWidget {
@@ -52,8 +52,9 @@ class _InvoicesState extends State<Invoices> {
           startUpload: _startUpload,
           getImage: _getImage),
       RaisedButton(
-        onPressed: scanSumAndDisplay,
-        child: Text("OCR"),
+        onPressed: _image == null ? null : scanSumAndDisplay,
+        child: Text("Scan Invoice"),
+
       ),
       RaisedButton(
         child: Text('abc'),
@@ -78,33 +79,11 @@ class _InvoicesState extends State<Invoices> {
     _storage.ref().child(filePath).putFile(_image);
   }
 
-  Future<Invoice> scanInvoice() async {
-    double sum = -1;
-    FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(_image);
-    final TextRecognizer textRecognizer = FirebaseVision.instance.textRecognizer();
-    final VisionText visionText = await textRecognizer.processImage(visionImage);
-
-    Rect bb;
-    for (TextBlock block in visionText.blocks) {
-      for (TextLine line in block.lines) {
-        if (line.text.startsWith("S u")) {
-          bb = line.boundingBox;
-        }
-        if (bb != null && !line.text.startsWith("S u") && (line.boundingBox.bottomLeft.dy - bb.bottomLeft.dy).abs() < 10.0) {
-          print("Gefundene Summe: " + line.text);
-          sum = double.parse(line.text.replaceAll(",", "."));
-        }
-      }
-    }
-
-    if (sum == -1) {
-      print("*** Summe nicht gefunden !!!");
-    }
-    return Invoice(sum);
-  }
-
   void scanSumAndDisplay() async {
-    var inv = await scanInvoice();
+    setState(() {
+      _guiSum = 0;
+    });
+    var inv = await Provider.of<OcrService>(this.context, listen: false).scanInvoice(_image);
     print("summe: ${inv.sum}");
     setState(() {
       _guiSum = inv.sum;
