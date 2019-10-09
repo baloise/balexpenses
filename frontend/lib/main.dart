@@ -1,7 +1,18 @@
 import 'package:balexpenses/screens/HomeScreen.dart';
+import 'package:balexpenses/providers/ocr_service.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-void main() => runApp(MyApp());
+void main() {
+  runApp(
+      MultiProvider(
+        providers: [
+          ChangeNotifierProvider.value(value: OcrService()),
+        ],
+        child: MyApp(),
+      )
+  );
+}
 
 class MyApp extends StatelessWidget {
   @override
