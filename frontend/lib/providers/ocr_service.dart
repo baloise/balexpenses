@@ -3,32 +3,38 @@ import 'dart:io';
 import 'package:balexpenses/models/Invoice.dart';
 import 'package:firebase_ml_vision/firebase_ml_vision.dart';
 import 'package:flutter/cupertino.dart';
+import 'dart:math';
 
 class OcrService with ChangeNotifier {
 
+  // credits: https://medium.com/@teresa.wu/googles-ml-kit-text-recognition-with-sample-app-of-receipts-reading-7fe6dc68ada3
   Future<Invoice> scanInvoice(File image) async {
-    double sum = -1;
     FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(image);
     final TextRecognizer textRecognizer = FirebaseVision.instance.textRecognizer();
     final VisionText visionText = await textRecognizer.processImage(visionImage);
 
-    Rect bb;
-    for (TextBlock block in visionText.blocks) {
-      for (TextLine line in block.lines) {
-        if (line.text.startsWith("S u")) {
-          bb = line.boundingBox;
-        }
-        if (bb != null && !line.text.startsWith("S u") && (line.boundingBox.bottomLeft.dy - bb.bottomLeft.dy).abs() < 10.0) {
-          print("Gefundene Summe: " + line.text);
-          sum = double.parse(line.text.replaceAll(",", "."));
-        }
-      }
+    List<double> allNumbers = findNumbers(visionText.text);
+    double maxNumber = -1;
+    if (allNumbers != null && allNumbers.isNotEmpty) {
+      maxNumber = allNumbers.reduce(max);
     }
+    return Invoice(maxNumber);
 
-    if (sum == -1) {
-      print("*** Summe nicht gefunden !!!");
+  }
+
+  List<double> findNumbers(String text) {
+    List<double> result = [];
+    if (text != null && text.isNotEmpty) {
+      RegExp exp = new RegExp(r"[+-]?([0-9]*[,])?[0-9]+");
+      Iterable<RegExpMatch> matches = exp.allMatches(text);
+
+      result = matches
+      .map( (match) { return text.substring(match.start, match.end).replaceAll(",", ".");})
+      .where((str) {return str.contains(".");})
+      .map( (str) { return double.parse(str);}).toList()
+      ;
     }
-    return Invoice(sum);
+    return result;
   }
 
 }
