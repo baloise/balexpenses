@@ -22,7 +22,7 @@ class Invoices extends StatefulWidget {
 class _InvoicesState extends State<Invoices> {
   File _image;
   String fileId;
-  double _guiSum;
+  double _invoiceTotal;
   final FirebaseStorage _storage =
       FirebaseStorage(storageBucket: 'gs://balexpenses-bbaae.appspot.com/');
 
@@ -45,7 +45,7 @@ class _InvoicesState extends State<Invoices> {
                 textAlign: TextAlign.center,
               ),
       ),
-      Text("Ermittelte Summe: ${_guiSum.toString()} EUR"),
+      Text("Ermittelte Summe: ${_invoiceTotal.toString()} EUR"),
       InvoiceSelection(
           user: widget.user,
           image: _image,
@@ -81,12 +81,12 @@ class _InvoicesState extends State<Invoices> {
 
   void scanSumAndDisplay() async {
     setState(() {
-      _guiSum = 0;
+      _invoiceTotal = 0;
     });
     var inv = await Provider.of<OcrService>(this.context, listen: false).scanInvoice(_image);
     print("summe: ${inv.sum}");
     setState(() {
-      _guiSum = inv.sum;
+      _invoiceTotal = inv.sum;
     });
   }
 
