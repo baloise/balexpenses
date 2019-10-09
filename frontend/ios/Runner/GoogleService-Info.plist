@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>370000075349-5sms4c2cott4s8innjra2trbormdp39v.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.370000075349-5sms4c2cott4s8innjra2trbormdp39v</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>370000075349-m96m9hb3lahcupfkkosqeb62nmd6dlme.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCqhvK3ZJmAU7wosyAWGbR89EIr9j7Wi48</string>
+	<key>GCM_SENDER_ID</key>
+	<string>370000075349</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>ch.baloise.balexpenses</string>
+	<key>PROJECT_ID</key>
+	<string>balexpenses-bbaae</string>
+	<key>STORAGE_BUCKET</key>
+	<string>balexpenses-bbaae.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:370000075349:ios:85f7e9896a742ddb6292dc</string>
+	<key>DATABASE_URL</key>
+	<string>https://balexpenses-bbaae.firebaseio.com</string>
+</dict>
+</plist>
