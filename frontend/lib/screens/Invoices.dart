@@ -6,6 +6,9 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
+import 'package:balexpenses/models/Invoice.dart';
+import 'package:firebase_ml_vision/firebase_ml_vision.dart';
+
 
 class Invoices extends StatefulWidget {
   final user;
@@ -19,6 +22,7 @@ class Invoices extends StatefulWidget {
 class _InvoicesState extends State<Invoices> {
   File _image;
   String fileId;
+  double _guiSum;
   final FirebaseStorage _storage =
       FirebaseStorage(storageBucket: 'gs://balexpenses-bbaae.appspot.com/');
 
@@ -30,7 +34,7 @@ class _InvoicesState extends State<Invoices> {
         height: 100,
         decoration:
             BoxDecoration(border: Border.all(width: 1, color: Colors.grey)),
-        child: this._image != null
+        child: _image != null
             ? Image.file(
                 _image,
                 fit: BoxFit.cover,
@@ -41,11 +45,16 @@ class _InvoicesState extends State<Invoices> {
                 textAlign: TextAlign.center,
               ),
       ),
+      Text("Ermittelte Summe: ${_guiSum.toString()} EUR"),
       InvoiceSelection(
           user: widget.user,
           image: _image,
           startUpload: _startUpload,
           getImage: _getImage),
+      RaisedButton(
+        onPressed: scanSumAndDisplay,
+        child: Text("OCR"),
+      ),
       RaisedButton(
         child: Text('abc'),
         onPressed: saveOcrData,
@@ -67,6 +76,39 @@ class _InvoicesState extends State<Invoices> {
 
     String filePath = "invoices/${widget.user.uid}/$fileId.$fileExtension";
     _storage.ref().child(filePath).putFile(_image);
+  }
+
+  Future<Invoice> scanInvoice() async {
+    double sum = -1;
+    FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(_image);
+    final TextRecognizer textRecognizer = FirebaseVision.instance.textRecognizer();
+    final VisionText visionText = await textRecognizer.processImage(visionImage);
+
+    Rect bb;
+    for (TextBlock block in visionText.blocks) {
+      for (TextLine line in block.lines) {
+        if (line.text.startsWith("S u")) {
+          bb = line.boundingBox;
+        }
+        if (bb != null && !line.text.startsWith("S u") && (line.boundingBox.bottomLeft.dy - bb.bottomLeft.dy).abs() < 10.0) {
+          print("Gefundene Summe: " + line.text);
+          sum = double.parse(line.text.replaceAll(",", "."));
+        }
+      }
+    }
+
+    if (sum == -1) {
+      print("*** Summe nicht gefunden !!!");
+    }
+    return Invoice(sum);
+  }
+
+  void scanSumAndDisplay() async {
+    var inv = await scanInvoice();
+    print("summe: ${inv.sum}");
+    setState(() {
+      _guiSum = inv.sum;
+    });
   }
 
   void saveOcrData() {
