@@ -1,5 +1,6 @@
 import 'dart:io';
-
+import 'package:intl/intl.dart';
+import 'package:balexpenses/models/Invoice.dart';
 import 'package:balexpenses/screens/InvoiceSelection.dart';
 import 'package:balexpenses/providers/ocr_service.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -22,7 +23,7 @@ class Invoices extends StatefulWidget {
 class _InvoicesState extends State<Invoices> {
   File _image;
   String fileId;
-  double _invoiceTotal;
+  Invoice _invoice;
   final FirebaseStorage _storage =
       FirebaseStorage(storageBucket: 'gs://balexpenses-bbaae.appspot.com/');
 
@@ -45,7 +46,8 @@ class _InvoicesState extends State<Invoices> {
                 textAlign: TextAlign.center,
               ),
       ),
-      Text("Ermittelte Summe: ${_invoiceTotal.toString()} EUR"),
+      Text(_invoice == null ? "-" : "Ermittelte Summe: ${_invoice.sum.toString()} EUR"),
+      Text(_invoice == null ? "-" : "${new DateFormat('dd-MM-yyyy').format(_invoice.date)}"),
       InvoiceSelection(
           user: widget.user,
           image: _image,
@@ -81,16 +83,16 @@ class _InvoicesState extends State<Invoices> {
 
   void scanSumAndDisplay() async {
     setState(() {
-      _invoiceTotal = 0;
+      _invoice = null;
     });
     var inv = await Provider.of<OcrService>(this.context, listen: false).scanInvoice(_image);
-    print("summe: ${inv.sum}");
     setState(() {
-      _invoiceTotal = inv.sum;
+      _invoice = inv;
     });
   }
 
-  void saveOcrData() {
+  void saveOcrData(Invoice invoice) {
+    var data = {'date': invoice.date, 'market': 'lidl', 'sum': invoice.sum};
     Firestore.instance
         .collection('user')
         .document(widget.user.uid)
