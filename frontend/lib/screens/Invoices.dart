@@ -79,7 +79,7 @@ class _InvoicesState extends State<Invoices> {
   }
 
   Future<Invoice> scanInvoice() async {
-    double sum = 0;
+    double sum = -1;
     FirebaseVisionImage visionImage = FirebaseVisionImage.fromFile(_image);
     final TextRecognizer textRecognizer = FirebaseVision.instance.textRecognizer();
     final VisionText visionText = await textRecognizer.processImage(visionImage);
@@ -90,18 +90,22 @@ class _InvoicesState extends State<Invoices> {
         if (line.text.startsWith("S u")) {
           bb = line.boundingBox;
         }
-        if (bb != null && !line.text.startsWith("S u") && (line.boundingBox.bottomLeft.dy - bb.bottomLeft.dy).abs() < 4.0) {
+        if (bb != null && !line.text.startsWith("S u") && (line.boundingBox.bottomLeft.dy - bb.bottomLeft.dy).abs() < 10.0) {
           print("Gefundene Summe: " + line.text);
           sum = double.parse(line.text.replaceAll(",", "."));
         }
       }
     }
 
+    if (sum == -1) {
+      print("*** Summe nicht gefunden !!!");
+    }
     return Invoice(sum);
   }
 
   void scanSumAndDisplay() async {
     var inv = await scanInvoice();
+    print("summe: ${inv.sum}");
     setState(() {
       _guiSum = inv.sum;
     });
