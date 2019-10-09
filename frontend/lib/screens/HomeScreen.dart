@@ -20,11 +20,11 @@ class _HomeScreenState extends State<HomeScreen> {
     Firestore.instance
         .collection('user')
         .document(user.uid)
-        .collection('invoices')
-        .getDocuments()
+        .get()
         .then((snapshot) {
+          print(snapshot);
       setState(() {
-        result = snapshot.documents.first.data['market'];
+        result = snapshot['2020'].toString();
       });
     });
   }
