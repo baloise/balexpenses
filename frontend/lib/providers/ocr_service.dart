@@ -14,7 +14,8 @@ class OcrService with ChangeNotifier {
 
     double maxNumber = maxNumberInText(visionText.text);
     var invoiceDate = findDate(visionText.text);
-    return Invoice(maxNumber, invoiceDate);
+    String store = findStore(visionText);
+    return Invoice(store, maxNumber, invoiceDate);
   }
 
   double maxNumberInText(String text) {
@@ -57,6 +58,26 @@ class OcrService with ChangeNotifier {
         year = (year < 100) ? year + 2000 : year;
         result = DateTime(year, int.parse(monthString), int.parse(dayString));
       }
+    }
+    return result;
+  }
+  String findStore(VisionText visionText) {
+    String result;
+    List<String> wellKnownStores = ["LDL", "ALDI"];
+    var storeMap = { 'LDL': 'LIDL', 'ALDI': 'ALDI' };
+
+    List<String> storesFromText = visionText.blocks
+        .map((block) => block.lines.map((ln) => ln.text))
+        .expand((it) => it)
+        .map((it) => wellKnownStores.firstWhere((store) => it.contains(store), orElse: () => "-"))
+        .where((it) => it != '-')
+        .toList();
+
+    if (storesFromText.length > 0) {
+      result = storeMap[storesFromText.first];
+    }
+    if (result == null) {
+      result = 'unknown';
     }
     return result;
   }

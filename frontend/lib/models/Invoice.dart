@@ -1,6 +1,7 @@
 class Invoice {
   double sum;
   DateTime date;
+  String store;
 
-  Invoice(this.sum, this.date);
+  Invoice(this.store, this.sum, this.date);
 }
