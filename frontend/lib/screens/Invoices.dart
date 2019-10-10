@@ -46,6 +46,7 @@ class _InvoicesState extends State<Invoices> {
                 textAlign: TextAlign.center,
               ),
       ),
+      Text(_invoice == null ? "-" : "Store: ${_invoice.store}"),
       Text(_invoice == null ? "-" : "Ermittelte Summe: ${_invoice.sum.toString()} EUR"),
       Text(_invoice == null ? "-" : "${new DateFormat('dd-MM-yyyy').format(_invoice.date)}"),
       InvoiceSelection(
@@ -70,6 +71,7 @@ class _InvoicesState extends State<Invoices> {
     fileId = DateTime.now().millisecondsSinceEpoch.toString();
 
     setState(() {
+      _invoice = null;
       _image = image;
     });
   }
