@@ -38,23 +38,32 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final _user = Provider.of<User>(context);
     final FirebaseAuthService auth = Provider.of<FirebaseAuthService>(context);
 
     return Scaffold(
-        appBar: AppBar(
-          title: Text("Baloise expenses"),
-          actions: <Widget>[
-            FlatButton(
-              child: Text(
-                'Logout',
-                style: TextStyle(
-                  fontSize: 18.0,
-                  color: Colors.white,
+        drawer: Drawer(
+          child: ListView(
+            children: <Widget>[
+              UserAccountsDrawerHeader(
+                accountName:
+                    Text(_user.displayName != null ? _user.displayName : ''),
+                accountEmail: Text(_user?.email),
+                currentAccountPicture: CircleAvatar(
+                  backgroundImage: _user.avatar != null
+                      ? NetworkImage(_user.avatar)
+                      : AssetImage('assets/images/default-user.png'),
                 ),
               ),
-              onPressed: () => auth.signOut(),
-            ),
-          ],
+              ListTile(
+                title: Text("Logout"),
+                onTap: () => auth.signOut(),
+              ),
+            ],
+          ),
+        ),
+        appBar: AppBar(
+          title: Text("Baloise expenses"),
         ),
         body: Column(
           children: <Widget>[

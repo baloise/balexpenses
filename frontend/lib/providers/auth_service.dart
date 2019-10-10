@@ -8,11 +8,13 @@ class User {
     @required this.uid,
     this.email,
     this.displayName,
+    this.avatar,
   });
 
   final String uid;
   final String email;
   final String displayName;
+  final String avatar;
 }
 
 class FirebaseAuthService with ChangeNotifier {
@@ -73,6 +75,7 @@ class FirebaseAuthService with ChangeNotifier {
       uid: user.uid,
       email: user.email,
       displayName: user.displayName,
+      avatar: user.photoUrl,
     );
   }
 }
