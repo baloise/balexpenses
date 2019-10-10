@@ -1,8 +1,9 @@
-import 'package:balexpenses/screens/AuthScreen.dart';
+import 'package:balexpenses/providers/auth_service.dart';
 import 'package:balexpenses/screens/ResultScreen.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import 'Invoices.dart';
 
@@ -22,7 +23,7 @@ class _HomeScreenState extends State<HomeScreen> {
         .document(user.uid)
         .get()
         .then((snapshot) {
-          print(snapshot);
+      print(snapshot);
       setState(() {
         result = snapshot['2020'].toString();
       });
@@ -37,15 +38,26 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final FirebaseAuthService auth = Provider.of<FirebaseAuthService>(context);
+
     return Scaffold(
         appBar: AppBar(
           title: Text("Baloise expenses"),
+          actions: <Widget>[
+            FlatButton(
+              child: Text(
+                'Logout',
+                style: TextStyle(
+                  fontSize: 18.0,
+                  color: Colors.white,
+                ),
+              ),
+              onPressed: () => auth.signOut(),
+            ),
+          ],
         ),
         body: Column(
           children: <Widget>[
-            AuthScreen(
-              setUser: _setUser,
-            ),
             Invoices(
               user: user,
             ),

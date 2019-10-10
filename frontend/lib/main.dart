@@ -1,17 +1,17 @@
-import 'package:balexpenses/screens/HomeScreen.dart';
+import 'package:balexpenses/providers/auth_service.dart';
 import 'package:balexpenses/providers/ocr_service.dart';
+import 'package:balexpenses/screens/LandingPage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
-  runApp(
-      MultiProvider(
-        providers: [
-          ChangeNotifierProvider.value(value: OcrService()),
-        ],
-        child: MyApp(),
-      )
-  );
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider.value(value: OcrService()),
+      ChangeNotifierProvider.value(value: FirebaseAuthService()),
+    ],
+    child: MyApp(),
+  ));
 }
 
 class MyApp extends StatelessWidget {
@@ -23,7 +23,7 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.indigo,
         accentColor: Colors.white,
       ),
-      home: HomeScreen(),
+      home: LandingPage(),
     );
   }
 }
