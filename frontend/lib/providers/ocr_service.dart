@@ -63,8 +63,14 @@ class OcrService with ChangeNotifier {
   }
   String findStore(VisionText visionText) {
     String result;
-    List<String> wellKnownStores = ["LDL", "ALDI"];
-    var storeMap = { 'LDL': 'LIDL', 'ALDI': 'ALDI' };
+    var storeMap = {
+      'LDL': 'LIDL',
+      'ALDI': 'ALDI',
+      'HIEBER': 'HIEBER',
+      'ENGEL': 'Engel Apotheke',
+      'hirsch': 'Hirsch Apotheke',
+    };
+    List<String> wellKnownStores = storeMap.keys.toList();
 
     List<String> storesFromText = visionText.blocks
         .map((block) => block.lines.map((ln) => ln.text))
