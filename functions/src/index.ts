@@ -41,3 +41,31 @@ exports.getData = functions.https.onRequest(async (req, res) => {
             );
         });
 });
+
+exports.calculateSum = functions.firestore.document('user/{userId}/invoices/{invoiceId}').onWrite((change, context) => {
+
+    console.log(`Yeeehaaaa - I was triggered!`);
+
+    const userId = context.params.userId;
+    const invoiceId = context.params.invoiceId;
+
+    // Get an object with the previous document value (for update or delete)
+    const oldDocument = change.before.data();
+
+    // Get an object with the current document value.
+    // If the document does not exist, it has been deleted.
+    const document = change.after.exists ? change.after.data() : null;
+
+    // Check if the new document was deleted or created / updated
+    if(document) {
+        if(oldDocument) {
+           console.log(`User ${userId} has updated an existing invoice ${invoiceId} => updating sums...`);
+        } else {
+           console.log(`User ${userId} has created a new invoice ${invoiceId} => updating sums...`);
+        }
+    } else {
+        console.log(`User ${userId} has deleted invoice ${invoiceId}.`);
+    }
+
+    return `End of Function`;
+});
