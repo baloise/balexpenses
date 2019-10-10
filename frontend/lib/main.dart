@@ -1,15 +1,11 @@
-import 'package:balexpenses/providers/auth_service.dart';
-import 'package:balexpenses/providers/ocr_service.dart';
+import 'package:balexpenses/provider_setup.dart' as prefix0;
 import 'package:balexpenses/screens/LandingPage.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 void main() {
   runApp(MultiProvider(
-    providers: [
-      ChangeNotifierProvider.value(value: OcrService()),
-      ChangeNotifierProvider.value(value: FirebaseAuthService()),
-    ],
+    providers: prefix0.providers,
     child: MyApp(),
   ));
 }
