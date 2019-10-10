@@ -1,5 +1,6 @@
 import 'package:balexpenses/providers/auth_service.dart';
 import 'package:balexpenses/screens/ResultScreen.dart';
+import 'package:balexpenses/widgets/app_drawer.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -42,26 +43,7 @@ class _HomeScreenState extends State<HomeScreen> {
     final FirebaseAuthService auth = Provider.of<FirebaseAuthService>(context);
 
     return Scaffold(
-        drawer: Drawer(
-          child: ListView(
-            children: <Widget>[
-              UserAccountsDrawerHeader(
-                accountName:
-                    Text(_user.displayName != null ? _user.displayName : ''),
-                accountEmail: Text(_user?.email),
-                currentAccountPicture: CircleAvatar(
-                  backgroundImage: _user.avatar != null
-                      ? NetworkImage(_user.avatar)
-                      : AssetImage('assets/images/default-user.png'),
-                ),
-              ),
-              ListTile(
-                title: Text("Logout"),
-                onTap: () => auth.signOut(),
-              ),
-            ],
-          ),
-        ),
+        drawer: AppDrawer(user: _user, signout: auth.signOut),
         appBar: AppBar(
           title: Text("Baloise expenses"),
         ),
