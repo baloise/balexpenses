@@ -58,13 +58,54 @@ exports.calculateSum = functions.firestore.document('user/{userId}/invoices/{inv
 
     // Check if the new document was deleted or created / updated
     if(document) {
+        const date = document.date.toDate();
+        const sum = document.sum;
         if(oldDocument) {
-           console.log(`User ${userId} has updated an existing invoice ${invoiceId} => updating sums...`);
+           console.log(`User [${userId}] has updated an existing invoice [${invoiceId}] => updating sums...`);
+           console.log(`Invoice Date: ${date.toString()}`);
+           console.log(`Invoice Sum: ${sum}`);
         } else {
-           console.log(`User ${userId} has created a new invoice ${invoiceId} => updating sums...`);
+           console.log(`User [${userId}] has created a new invoice [${invoiceId}] => updating sums...`);
+           console.log(`Invoice Date: ${date.toString()}`);
+           console.log(`Invoice Sum: ${sum}`);
+
+//            const year = date.getFullYear().toString();
+//            const month = date.getMonth().toString();
+
+           firestore
+               .collection('user')
+               .doc(userId)
+               .get()
+               .then((result: any) => {
+                    if(result) {
+                    // get week
+                    // get month
+                    // get year
+
+                        const existingYearSum = result.docs.first().get('year');
+                        console.log(`Existing year sum: ${existingYearSum}`)
+                        if(existingYearSum) {
+                            result.docs.first().set('year', existingYearSum + sum);
+                        } else {
+                            result.docs.first().set('year', sum);
+                        }
+                            firestore
+                            .collection('user')
+                            .doc(userId)
+                            .set(result.docs.first());
+                    }
+               });
         }
+
+
     } else {
-        console.log(`User ${userId} has deleted invoice ${invoiceId}.`);
+        if(oldDocument) {
+        const date = oldDocument.date.toDate();
+        const sum = oldDocument.sum;
+        console.log(`User [${userId}] has deleted invoice [${invoiceId} => updating sums...`);
+        console.log(`Invoice Date: ${date.toString()}`);
+        console.log(`Invoice Sum: ${sum}`);
+        }
     }
 
     return `End of Function`;
