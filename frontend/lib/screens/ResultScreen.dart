@@ -33,6 +33,10 @@ class ResultScreen extends StatelessWidget {
                                 : "No User",
                           style: TextStyle(fontSize: 20),
                         ),
+                        RaisedButton(
+                          child: Text('get Result'),
+                          onPressed: () => stateProvider.getResult(user),
+                        ),
                         Expanded(
                           child: ListView.builder(
                             scrollDirection: Axis.vertical,
@@ -42,10 +46,6 @@ class ResultScreen extends StatelessWidget {
                               return ResultItem(it.key, it.value.toString());
                             },
                           ),
-                        ),
-                        RaisedButton(
-                          child: Text('get Result'),
-                          onPressed: () => stateProvider.getResult(user),
                         ),
                       ],
                     )
