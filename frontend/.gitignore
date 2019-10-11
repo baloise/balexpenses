@@ -73,4 +73,5 @@
 !/packages/flutter_tools/test/data/dart_dependencies_test/**/.packages
 
 !/local.properties
-/android/app/keystore_name.keystore
+/android/keystore_name.keystore
+/android/key.properties
