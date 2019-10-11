@@ -1,3 +1,4 @@
+import 'package:balexpenses/providers/state_provider.dart';
 import 'package:balexpenses/providers/auth_service.dart';
 import 'package:balexpenses/providers/ocr_service.dart';
 import 'package:balexpenses/screens/LandingPage.dart';
@@ -9,6 +10,7 @@ void main() {
     providers: [
       ChangeNotifierProvider.value(value: OcrService()),
       ChangeNotifierProvider.value(value: FirebaseAuthService()),
+      ChangeNotifierProvider.value(value: StateProvider()),
     ],
     child: MyApp(),
   ));
@@ -23,7 +25,10 @@ class MyApp extends StatelessWidget {
         primarySwatch: Colors.indigo,
         accentColor: Colors.white,
       ),
-      home: LandingPage(),
+      initialRoute: '/',
+      routes: {
+        '/': (context) => LandingPage(),
+      },
     );
   }
 }

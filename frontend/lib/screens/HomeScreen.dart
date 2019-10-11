@@ -1,7 +1,5 @@
 import 'package:balexpenses/providers/auth_service.dart';
 import 'package:balexpenses/screens/ResultScreen.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -13,28 +11,6 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
-  UserInfo user;
-
-  String result;
-
-  getResult() {
-    Firestore.instance
-        .collection('user')
-        .document(user.uid)
-        .get()
-        .then((snapshot) {
-      print(snapshot);
-      setState(() {
-        result = snapshot['2020'].toString();
-      });
-    });
-  }
-
-  void _setUser(u) {
-    setState(() {
-      this.user = u;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -59,10 +35,22 @@ class _HomeScreenState extends State<HomeScreen> {
         body: Column(
           children: <Widget>[
             Invoices(
-              user: user,
+              user: null,
             ),
-            ResultScreen(user: user, result: result, getResult: getResult),
-            Text(this.user != null ? user.email : '-'),
+            RaisedButton(
+              onPressed: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (ctx) => ResultScreen(),//
+                )
+              ),
+              child: Text("Results"),
+            ),
+            Consumer<User>(
+              builder: (ctx, user, child) {
+                return Text(user != null ? user.email : 'User: -');
+              },
+            ),
           ],
         ));
   }
