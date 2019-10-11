@@ -10,7 +10,6 @@ matrix:
       # Run integration tests on android
       before_install:
         - sudo apt-get install -y --no-install-recommends lib32stdc++6 libstdc++6 > /dev/null
-        # Install the Android SDK Dependency.
         - export ANDROID_HOME=/opt/android-sdk-linux
         - cd /opt
         - wget -q https://dl.google.com/android/repository/sdk-tools-linux-4333796.zip -O android-sdk-tools.zip
