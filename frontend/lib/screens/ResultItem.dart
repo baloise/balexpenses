@@ -10,9 +10,8 @@ class ResultItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Card(
-      color: Colors.green,
+      color: Theme.of(context).primaryColor,
       child: ListTile(
-        trailing: Icon(Icons.keyboard_arrow_right),
         title: Text(
             value,
           style: TextStyle(fontSize: 20, color: Colors.white),

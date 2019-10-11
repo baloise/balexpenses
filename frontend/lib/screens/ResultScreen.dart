@@ -34,7 +34,8 @@ class ResultScreen extends StatelessWidget {
                           style: TextStyle(fontSize: 20),
                         ),
                         RaisedButton(
-                          child: Text('get Result'),
+                          child: Text('Retrieve Result Data', style: TextStyle(color: Colors.white),),
+                          color: Theme.of(context).buttonTheme.colorScheme.background,
                           onPressed: () => stateProvider.getResult(user),
                         ),
                         Expanded(
