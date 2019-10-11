@@ -9,6 +9,7 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:path/path.dart';
 import 'package:provider/provider.dart';
+import 'package:tflite/tflite.dart';
 
 
 class Invoices extends StatefulWidget {
@@ -24,11 +25,22 @@ class _InvoicesState extends State<Invoices> {
   File _image;
   String fileId;
   Invoice _invoice;
+  List recognitions;
+  
   final FirebaseStorage _storage =
       FirebaseStorage(storageBucket: 'gs://balexpenses-bbaae.appspot.com/');
 
+  void loadModel() async {
+    String res = await Tflite.loadModel(
+        model: "assets/retrained_graph.lite",
+        labels: "assets/retrained_labels.txt",
+        numThreads: 1 // defaults to 1
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    loadModel();
     return Column(children: <Widget>[
       Container(
         width: 150,
@@ -45,6 +57,23 @@ class _InvoicesState extends State<Invoices> {
                 'No Image Selected',
                 textAlign: TextAlign.center,
               ),
+      ),
+      Container(child:Center(
+        child: recognitions != null
+          ? Column(children: <Widget>[
+              ...recognitions
+                .where((i) => i['label'] != '').toList()
+                  .map((r) => Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: <Widget>[
+                      Text(r['label'] != null ? r['label'] : ''),
+                      Text(r['confidence'] != null ? r['confidence'].toString() : ''),
+                    ],
+                  ),)
+            ])
+          : Container(),
+      ),
       ),
       Text(_invoice == null ? "-" : "Store: ${_invoice.store}"),
       Text(_invoice == null ? "-" : "Ermittelte Summe: ${_invoice.sum.toString()} EUR"),
@@ -70,10 +99,21 @@ class _InvoicesState extends State<Invoices> {
     var image = await ImagePicker.pickImage(source: ImageSource.gallery);
     fileId = DateTime.now().millisecondsSinceEpoch.toString();
 
+    var result = await Tflite.runModelOnImage(
+        path: image. path,   // required
+        imageMean: 0.0,   // defaults to 117.0
+        imageStd: 255.0,  // defaults to 1.0
+        numResults: 2,    // defaults to 5
+        threshold: 0.2,   // defaults to 0.1
+        asynch: true      // defaults to true
+    );
+
     setState(() {
+      recognitions = result;
       _invoice = null;
       _image = image;
     });
+    await Tflite.close();
   }
 
   void _startUpload() {
