@@ -46,22 +46,22 @@ class _InvoicesState extends State<Invoices> {
                 textAlign: TextAlign.center,
               ),
       ),
-      Text(_invoice == null ? "-" : "Store: ${_invoice.store}"),
+      Text(_invoice == null ? "store: -" : "Store: ${_invoice.store}"),
       Text(_invoice == null ? "-" : "Ermittelte Summe: ${_invoice.sum.toString()} EUR"),
       Text(_invoice == null ? "-" : "${new DateFormat('dd-MM-yyyy').format(_invoice.date)}"),
       InvoiceSelection(
           user: widget.user,
           image: _image,
-          startUpload: _startUpload,
-          getImage: _getImage),
+          getImage: _getImage,
+      ),
       RaisedButton(
         onPressed: _image == null ? null : scanSumAndDisplay,
         child: Text("Scan Invoice"),
 
       ),
       RaisedButton(
-        child: Text('abc'),
-        onPressed: () => saveOcrData(_invoice),
+        child: Text('Upload Data'),
+        onPressed: uploadData,
       )
     ]);
   }
@@ -93,8 +93,12 @@ class _InvoicesState extends State<Invoices> {
     });
   }
 
+  void uploadData() {
+    saveOcrData(_invoice);
+    _startUpload();
+  }
   void saveOcrData(Invoice invoice) {
-    var data = {'date': invoice.date, 'market': 'lidl', 'sum': invoice.sum};
+    var data = {'date': invoice.date, 'market': invoice.store, 'sum': invoice.sum};
     Firestore.instance
         .collection('user')
         .document(widget.user.uid)
