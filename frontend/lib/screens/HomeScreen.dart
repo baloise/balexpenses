@@ -58,11 +58,17 @@ class _HomeScreenState extends State<HomeScreen> {
         ),
         body: Column(
           children: <Widget>[
-            Invoices(
-              user: user,
-            ),
             ResultScreen(user: user, result: result, getResult: getResult),
             Text(this.user != null ? user.email : '-'),
+            RaisedButton(
+              child: Text("erfasse Kassenzettel"),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => Invoices(user: user)),
+                );
+              },
+            )
           ],
         ));
   }

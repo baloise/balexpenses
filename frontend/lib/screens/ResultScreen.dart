@@ -6,7 +6,7 @@ class ResultScreen extends StatelessWidget {
   final String result;
   final Function getResult;
 
-  const ResultScreen({this.user, this.result, this.getResult});
+  ResultScreen({this.user, this.result, this.getResult});
 
   @override
   Widget build(BuildContext context) {
